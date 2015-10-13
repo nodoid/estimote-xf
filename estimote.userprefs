@@ -1,0 +1,24 @@
+﻿<Properties StartupItem="Droid/estimote.Droid.csproj" RefactoringSettings.EnableRefactorings="True">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Android.4df1baca6de85fdb" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Droid/Beacon.cs">
+    <Files>
+      <File FileName="estimote/UI/Beacons.cs" Line="59" Column="1" />
+      <File FileName="estimote/estimote.cs" Line="25" Column="21" />
+      <File FileName="iOS/AppDelegate.cs" Line="1" Column="1" />
+      <File FileName="Droid/MainActivity.cs" Line="1" Column="1" />
+      <File FileName="estimote/Classes/BeaconData.cs" Line="14" Column="1" />
+      <File FileName="Droid/Beacon.cs" Line="43" Column="1" />
+      <File FileName="estimote/Interfaces/IBeacon.cs" Line="9" Column="33" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore>
+      <Breakpoint file="/Users/PFJ/Developer/estimote/Droid/Beacon.cs" line="93" column="1" />
+      <Breakpoint file="/Users/PFJ/Developer/estimote/Droid/Beacon.cs" line="87" column="1" />
+      <Breakpoint file="/Users/PFJ/Developer/estimote/Droid/Beacon.cs" line="57" column="1" />
+      <Breakpoint file="/Users/PFJ/Developer/estimote/Droid/Beacon.cs" line="61" column="1" />
+      <Breakpoint file="/Users/PFJ/Developer/estimote/estimote/UI/Beacons.cs" line="59" column="1" />
+    </BreakpointStore>
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
