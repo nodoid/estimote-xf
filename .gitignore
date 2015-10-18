@@ -1,0 +1,8 @@
+Droid/bin/*
+Droid/obj/*
+iOS/bin/*
+iOS/obj/*
+estimote/bin/*
+estimote/obj/*
+packages/*
+
