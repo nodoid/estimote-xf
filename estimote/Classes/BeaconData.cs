@@ -133,8 +133,11 @@ namespace estimote
             }
             set
             {
-                rssi = value;
-                OnPropertyChanged("RSSI");
+                if (rssi != value)
+                {
+                    rssi = value;
+                    OnPropertyChanged("RSSI");
+                }
             }
         }
 
