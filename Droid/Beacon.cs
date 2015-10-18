@@ -40,7 +40,9 @@ namespace estimote.Droid
                         if (found != null)
                         {
                             if (idx < App.Self.Beacons.Count)
+                            {
                                 App.Self.Beacons[idx].Rssi = found.Rssi;
+                            }
                         }
                     }
                 };
@@ -103,6 +105,7 @@ namespace estimote.Droid
         public void StopScanning()
         {
             BeaconManager.StopMonitoring(BeaconRegion);
+            BeaconManager.StopRanging(BeaconRegion);
             BeaconManager.Dispose();
         }
 
