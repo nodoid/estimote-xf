@@ -1,18 +1,16 @@
-﻿using System;
-
-using Xamarin.Forms;
-using System.Collections.Generic;
+﻿using Xamarin.Forms;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace estimote
 {
-    public class App : Application
+    public class App : Application,INotifyPropertyChanged
     {
-        public string APP_ID { get; private set; } = "estimote-eyl";
+        public string APP_ID { get; private set; } = "YOUR_APP_ID";
 
-        public string APP_TOKEN { get; private set; } = "1926a6c48604313b6c1ea30eb18085e0";
+        public string APP_TOKEN { get; private set; } = "YOUR_TOKEN_ID";
 
-        public string BEACON_ID { get; private set; } = "b9407f30-f5f8-466e-aff9-25556b57fe6d";
+        public string BEACON_ID { get; private set; } = "YOUR_BEACON_ID";
 
         public ObservableCollection<BeaconData> Beacons { get; set; }
 
@@ -22,11 +20,41 @@ namespace estimote
 
         public BeaconChangedEvent BeaconChangedClass { get; set; }
 
+        private bool isRunning;
+
+        public bool IsRunning
+        {
+            get
+            {
+                return isRunning; 
+            } 
+            set
+            { 
+                if (isRunning != value)
+                {
+                    isRunning = value; 
+                    OnPropertyChanged("IsRunning");
+                }
+            } 
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged == null)
+                return;
+
+            PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        }
+
         public App()
         {
             App.Self = this;
             BeaconChangedClass = new BeaconChangedEvent();
             Beacons = new ObservableCollection<BeaconData>();
+
+            IsRunning = false;
 
             DependencyService.Get<IBeacon>().InitialiseBeacon();
 
