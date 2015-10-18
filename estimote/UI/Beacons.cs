@@ -1,8 +1,5 @@
 ﻿using Xamarin.Forms;
-using System;
-using System.Collections;
-using System.ComponentModel;
-using System.Linq.Expressions;
+using System.Diagnostics;
 
 namespace estimote
 {
@@ -10,13 +7,20 @@ namespace estimote
     {
         public Beacons()
         {
-            if (Device.OS == TargetPlatform.iOS)
-                Padding = new Thickness(0, 20);
+            BindingContext = Application.Current;
+
+            var image = new Image
+            { 
+                Source = ImageSource.FromFile("backdrop.png"),
+                Aspect = Aspect.Fill,
+            };
 
             var btnStart = new Button
             {
                 WidthRequest = App.ScreenSize.Width / 2,
-                Text = "Start scanning"
+                Text = "Start scanning",
+                BackgroundColor = Color.Gray,
+                TextColor = Color.White
             };
             btnStart.Clicked += delegate
             {
@@ -27,18 +31,22 @@ namespace estimote
             {
                 WidthRequest = App.ScreenSize.Width / 2,
                 Text = "Stop scanning",
+                BackgroundColor = Color.Gray,
+                TextColor = Color.White,
+                IsEnabled = App.Self.IsRunning
             };
-            btnStop.Clicked += delegate
+            btnStop.Clicked += (object sender, System.EventArgs e) =>
             {
                 DependencyService.Get<IBeacon>().StopScanning();
             };
+            btnStop.SetBinding(Button.IsEnabledProperty, new Binding("IsRunning"));
 
             var btnStack = new StackLayout
             {
                 Orientation = StackOrientation.Horizontal,
-                Padding = new Thickness(5),
                 HorizontalOptions = LayoutOptions.FillAndExpand,
                 VerticalOptions = LayoutOptions.CenterAndExpand,
+                Padding = new Thickness(0, Device.OS == TargetPlatform.iOS ? 20 : 0),
                 Children =
                 {
                     btnStart, btnStop
@@ -47,28 +55,40 @@ namespace estimote
 
             var listView = new ListView
             {
-                WidthRequest = App.ScreenSize.Width * .9,
                 HasUnevenRows = true,
                 ItemsSource = App.Self.Beacons,
                 ItemTemplate = new DataTemplate(typeof(BeaconListViewCell)),
-                IsPullToRefreshEnabled = true
+                IsPullToRefreshEnabled = true,
+                SeparatorVisibility = SeparatorVisibility.None,
+                VerticalOptions = LayoutOptions.StartAndExpand
             };
 
-            App.Self.Beacons.CollectionChanged += (object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) =>
-            {
-                listView.ItemsSource = App.Self.Beacons;
-            };
-            
-            Content = new StackLayout
+            var stackLayout = new StackLayout
             { 
                 Orientation = StackOrientation.Vertical,
-                VerticalOptions = LayoutOptions.StartAndExpand,
+                VerticalOptions = LayoutOptions.FillAndExpand,
                 HorizontalOptions = LayoutOptions.CenterAndExpand,
                 Children =
                 {
                     btnStack, listView
                 }
             };
+
+            var relativeLayout = new RelativeLayout();
+
+            relativeLayout.Children.Add(image,
+                Constraint.Constant(0),
+                Constraint.Constant(0),
+                Constraint.RelativeToParent((parent) => App.ScreenSize.Width),
+                Constraint.RelativeToParent((parent) => App.ScreenSize.Height));
+
+            relativeLayout.Children.Add(stackLayout,
+                Constraint.Constant(0),
+                Constraint.Constant(0),
+                Constraint.RelativeToParent((parent) => App.ScreenSize.Width),
+                Constraint.RelativeToParent((parent) => App.ScreenSize.Height));
+
+            Content = relativeLayout;
         }
 
         public class BeaconListViewCell : ViewCell
@@ -119,6 +139,14 @@ namespace estimote
                 };
                 lblRSSI.SetBinding(Label.TextProperty, new Binding("Rssi", stringFormat: "Signal = {0}"));
 
+                var lblProximity = new Label()
+                {
+                    Text = "date",
+                    TextColor = Color.Yellow,
+                    Font = Font.SystemFontOfSize(NamedSize.Small)
+                };
+                lblProximity.SetBinding(Label.TextProperty, new Binding("ProximityDist", stringFormat: "Proximity = {0}"));
+
                 var stackDataTop = new StackLayout
                 {
                     Orientation = StackOrientation.Horizontal,
@@ -126,6 +154,15 @@ namespace estimote
                     Children =
                     {
                         lblMajor, lblMinor
+                    }
+                };
+                var stackDataMiddle = new StackLayout
+                {
+                    Orientation = StackOrientation.Horizontal,
+                    HorizontalOptions = LayoutOptions.FillAndExpand,
+                    Children =
+                    {
+                        lblProximity
                     }
                 };
                 var stackDataBottom = new StackLayout
@@ -143,7 +180,7 @@ namespace estimote
                     Orientation = StackOrientation.Vertical,
                     VerticalOptions = LayoutOptions.StartAndExpand,
                     Padding = new Thickness(12, 8),
-                    Children = { lblUUID, stackDataTop, stackDataBottom }
+                    Children = { lblUUID, stackDataTop, stackDataMiddle, stackDataBottom }
                 };
             }
         }
